@@ -81,18 +81,18 @@ const DADOS = {
   nome:          "Victor Ezaki",
   especialidade: "Neurologista",
   crm:           "CRM-SP 22758",
-  rqe:           "149080",                          // ex.: "RQE 00000"
+  rqe:           "RQE 149080",                          // ex.: "RQE 00000"
   bio:           "Neurologista Vascular",
   //telefone:      "+55 11 92641-3069",
   whatsapp:      "5511926413069",             // só números, com 55 + DDD
-  mensagemWhatsapp: "Olá! Gostaria de agendar uma consulta.",
+  mensagemWhatsapp: "Olá! Gostaria de agendar uma consulta com o Dr.Ezaki",
   email:         "victorezaki.neuro@gmail.com",
   site:          "",                          // ex.: "https://www.exemplo.com"
   clinica:       "Nome da clínica ou consultório",
   endereco:      "Rua Exemplo, 123 - Sala 45, Bairro, São Paulo - SP, 00000-000",
   linkMapa:      "",                          // opcional: cole o link do Google Maps; se vazio, é criado a partir do endereço
-  horario:       "Segunda a sexta, das 8h às 18h",
-  foto:          ""                           // opcional: link público de uma imagem. Vazio = iniciais do nome
+  horario:       "Segunda a sexta, das 9h às 18h",
+  foto:          "foto.jpg"                   // arquivo da foto (na mesma pasta do index.html). Vazio = iniciais do nome
 };
 /* ============================================================ */
 
@@ -185,6 +185,8 @@ if (D.whatsapp) {
 /* Salvar contato (.vcf) */
 const esc = s => (s || "").replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\n/g, "\\n");
 function vcard() {
+  const telVcard = D.telefone ? soNumeros(D.telefone)
+                 : (D.whatsapp ? "+" + soNumeros(D.whatsapp).replace("+", "") : "");
   const partes = D.nome.replace(/^(dr\(a\)\.?|dra\.?|dr\.?)\s*/i, "").trim().split(/\s+/);
   const sobrenome = partes.length > 1 ? partes.pop() : "";
   const linhas = [
@@ -193,7 +195,7 @@ function vcard() {
     "FN:" + esc(D.nome),
     D.clinica ? "ORG:" + esc(D.clinica) : "",
     D.especialidade ? "TITLE:" + esc(D.especialidade) : "",
-    D.telefone ? "TEL;TYPE=CELL,VOICE:" + soNumeros(D.telefone) : "",
+    telVcard ? "TEL;TYPE=CELL,VOICE:" + telVcard : "",
     D.email ? "EMAIL;TYPE=WORK:" + esc(D.email) : "",
     D.site ? "URL:" + esc(D.site) : "",
     D.endereco ? "ADR;TYPE=WORK:;;" + esc(D.endereco) + ";;;;" : "",
